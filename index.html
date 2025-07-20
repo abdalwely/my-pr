@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevMasters Team - فريق التطوير الاحترافي</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="description" content="فريق DevMasters Team - متخصصون في تطوير البرمجيات والحلول التقنية المتقدمة">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-logo">
+                <i class="fas fa-code"></i>
+                <span>DevMasters</span>
+            </div>
+            <div class="loader-spinner"></div>
+            <p>جاري التحميل...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="container">
+            <div class="nav-brand">
+                <i class="fas fa-code"></i>
+                <span>DevMasters</span>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="#home" class="nav-link">الرئيسية</a></li>
+                <li><a href="#about" class="nav-link">من نحن</a></li>
+                <li><a href="#services" class="nav-link">خدماتنا</a></li>
+                <li><a href="#team" class="nav-link">فريق العمل</a></li>
+                <li><a href="#projects" class="nav-link">مشاريعنا</a></li>
+                <li><a href="#why-us" class="nav-link">لماذا نحن</a></li>
+                <li><a href="#contact" class="nav-link">اتصل بنا</a></li>
+            </ul>
+            <div class="hamburger" id="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-background">
+            <div class="floating-shapes">
+                <div class="shape shape-1"></div>
+                <div class="shape shape-2"></div>
+                <div class="shape shape-3"></div>
+                <div class="shape shape-4"></div>
+                <div class="shape shape-5"></div>
+            </div>
+        </div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="container">
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="title-line">مرحباً بك في</span>
+                        <span class="highlight">DevMasters Team</span>
+                    </h1>
+                    <p class="hero-subtitle">فريق تقني متخصص في تطوير البرمجيات، نعمل بشغف لابتكار حلول تقنية تواكب المستقبل</p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" data-target="50">0</span>
+                            <span class="stat-label">مشروع مكتمل</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-target="5">0</span>
+                            <span class="stat-label">سنوات خبرة</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" data-target="100">0</span>
+                            <span class="stat-label">عميل راضي</span>
+                        </div>
+                    </div>
+                    <div class="hero-buttons">
+                        <a href="#contact" class="btn btn-primary">
+                            <span>تواصل معنا</span>
+                            <i class="fas fa-arrow-left"></i>
+                        </a>
+                        <a href="#about" class="btn btn-secondary">
+                            <span>اعرف المزيد</span>
+                            <i class="fas fa-play"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <div class="scroll-mouse">
+                <div class="scroll-wheel"></div>
+            </div>
+            <span>اسحب للأسفل</span>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">من نحن</h2>
+                <p class="section-subtitle">تعرف على فريق DevMasters وقصة نجاحنا</p>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    <div class="about-item">
+                        <div class="about-icon">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="about-info">
+                            <h3>رؤيتنا</h3>
+                            <p>أن نصبح شركاء نجاح موثوقين لكل من يبحث عن حلول تقنية متقدمة.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="about-item">
+                        <div class="about-icon">
+                            <i class="fas fa-target"></i>
+                        </div>
+                        <div class="about-info">
+                            <h3>مهمتنا</h3>
+                            <p>تحويل الأفكار إلى واقع رقمي ملموس من خلال فريق متخصص وخبرات متنوعة.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="values-section">
+                        <h3>قيمنا</h3>
+                        <div class="values">
+                            <div class="value-item">
+                                <i class="fas fa-gem"></i>
+                                <span>الجودة</span>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-handshake"></i>
+                                <span>الالتزام</span>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>الإبداع</span>
+                            </div>
+                            <div class="value-item">
+                                <i class="fas fa-shield-alt"></i>
+                                <span>الشفافية</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="image-container">
+                        <img src="https://images.pexels.com/photos/3184306/pexels-photo-3184306.jpeg?auto=compress&cs=tinysrgb&w=600" alt="فريق العمل">
+                        <div class="image-overlay">
+                            <div class="play-button">
+                                <i class="fas fa-play"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section id="services" class="services section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">خدماتنا</h2>
+                <p class="section-subtitle">نقدم مجموعة شاملة من الحلول التقنية المتقدمة</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="service-icon">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3>تطوير مواقع إلكترونية</h3>
+                    <p>تصميم وتطوير مواقع إلكترونية متجاوبة وعصرية باستخدام أحدث التقنيات</p>
+                    <div class="service-features">
+                        <span>React</span>
+                        <span>Vue.js</span>
+                        <span>Angular</span>
+                    </div>
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="service-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>تصميم تطبيقات الموبايل</h3>
+                    <p>تطوير تطبيقات موبايل أصلية ومتعددة المنصات بواجهات مستخدم متميزة</p>
+                    <div class="service-features">
+                        <span>Flutter</span>
+                        <span>React Native</span>
+                        <span>Native</span>
+                    </div>
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="service-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>حلول ذكاء اصطناعي</h3>
+                    <p>تطوير أنظمة ذكية وحلول تحليل البيانات المتقدمة للشركات</p>
+                    <div class="service-features">
+                        <span>Python</span>
+                        <span>TensorFlow</span>
+                        <span>PyTorch</span>
+                    </div>
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="service-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>تحليل البيانات</h3>
+                    <p>استخراج رؤى قيمة من البيانات وتحويلها إلى قرارات استراتيجية</p>
+                    <div class="service-features">
+                        <span>Power BI</span>
+                        <span>Tableau</span>
+                        <span>Analytics</span>
+                    </div>
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="500">
+                    <div class="service-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>استشارات برمجية</h3>
+                    <p>تقديم الاستشارات التقنية المتخصصة لتحسين الأداء والكفاءة</p>
+                    <div class="service-features">
+                        <span>Architecture</span>
+                        <span>Code Review</span>
+                        <span>Optimization</span>
+                    </div>
+                </div>
+                <div class="service-card" data-aos="fade-up" data-aos-delay="600">
+                    <div class="service-icon">
+                        <i class="fas fa-cloud"></i>
+                    </div>
+                    <h3>حلول سحابية</h3>
+                    <p>تطوير وتطبيق الحلول السحابية المتقدمة لضمان الأمان والاستقرار</p>
+                    <div class="service-features">
+                        <span>AWS</span>
+                        <span>Azure</span>
+                        <span>Google Cloud</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="team section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">فريق العمل</h2>
+                <p class="section-subtitle">التقِ بالخبراء الذين يقودون رحلة النجاح</p>
+            </div>
+            <div class="team-grid">
+                <div class="team-card" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="team-image">
+                        <img src="images/abod.jpg" alt="عبدالولي بازل">
+                        <div class="team-overlay">
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h3>عبدالولي بازل</h3>
+                        <p class="role">رئيس الفريق</p>
+                        <p class="description">قائد الفريق بخبرة واسعة في إدارة المشاريع التقنية المعقدة</p>
+                        <div class="team-skills">
+                            <span>Leadership</span>
+                            <span>Project Management</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="team-image">
+                        <img src="images/٢٠٢٤١٠١١_١٩١٠٣٦.jpg" alt="اسامه سيلان">
+                        <div class="team-overlay">
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h3>اسامه سيلان</h3>
+                        <p class="role">مطور واجهات أمامية</p>
+                        <p class="description">متخصص في تطوير الواجهات التفاعلية باستخدام أحدث تقنيات الفرونت اند</p>
+                        <div class="team-skills">
+                            <span>React</span>
+                            <span>Vue.js</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="team-image">
+                        <img src="images/Screenshot_٢٠٢٤١٠١١-١٩٠٨٠٠_Gallery.jpg" alt="عزام المراني">
+                        <div class="team-overlay">
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h3>عزام المراني</h3>
+                        <p class="role">مهندس برمجيات وذكاء اصطناعي</p>
+                        <p class="description">خبير في تطوير أنظمة الذكاء الاصطناعي والحلول التقنية المتقدمة</p>
+                        <div class="team-skills">
+                            <span>Python</span>
+                            <span>AI/ML</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="team-image">
+                        <img src="images/Screenshot_٢٠٢٤١٠١١-١٩٠٧٤١_Gallery.jpg" alt="احمد محرم">
+                        <div class="team-overlay">
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-dribbble"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-behance"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h3>احمد محرم</h3>
+                        <p class="role">مصمم UX/UI</p>
+                        <p class="description">مبدع في تصميم تجارب المستخدم وواجهات التطبيقات العصرية</p>
+                        <div class="team-skills">
+                            <span>Figma</span>
+                            <span>Adobe XD</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="team-card" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="team-image">
+                        <img src="images/1724159585328.jpg" alt="انس المهدي ">
+                        <div class="team-overlay">
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fas fa-envelope"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="team-info">
+                        <h3>انس المهدي</h3>
+                        <p class="role"> مسؤول قواعد البيانات </p>
+                        <p class="description">محترف في إدارة قواعد البيانات  وضمان التسليم في الوقت المحدد</p>
+                        <div class="team-skills">
+                            <span>Agile</span>
+                            <span>Scrum</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">مشاريعنا</h2>
+                <p class="section-subtitle">استكشف مجموعة من أعمالنا المتميزة</p>
+            </div>
+            <div class="projects-filter">
+                <button class="filter-btn active" data-filter="all">الكل</button>
+                <button class="filter-btn" data-filter="web">مواقع إلكترونية</button>
+                <button class="filter-btn" data-filter="mobile">تطبيقات موبايل</button>
+                <button class="filter-btn" data-filter="ai">ذكاء اصطناعي</button>
+            </div>
+            <div class="projects-grid">
+                <div class="project-card" data-category="web" data-aos="fade-up" data-aos-delay="100">
+                    <div class="project-image">
+                        <img src="https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=600" alt="منصة EduSmart">
+                        <div class="project-overlay">
+                            <div class="project-actions">
+                                <a href="#" class="btn btn-small">
+                                    <i class="fas fa-eye"></i>
+                                    معاينة
+                                </a>
+                                <a href="#" class="btn btn-small btn-outline">
+                                    <i class="fas fa-info-circle"></i>
+                                    التفاصيل
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-category">تعليم</div>
+                        <h3>منصة EduSmart التعليمية</h3>
+                        <p>منصة تعليمية تفاعلية تستخدم أحدث التقنيات لتقديم تجربة تعليمية متميزة</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">React</span>
+                            <span class="tech-tag">Node.js</span>
+                            <span class="tech-tag">MongoDB</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card" data-category="ai" data-aos="fade-up" data-aos-delay="200">
+                    <div class="project-image">
+                        <img src="https://images.pexels.com/photos/4386464/pexels-photo-4386464.jpeg?auto=compress&cs=tinysrgb&w=600" alt="تطبيق صحي">
+                        <div class="project-overlay">
+                            <div class="project-actions">
+                                <a href="#" class="btn btn-small">
+                                    <i class="fas fa-eye"></i>
+                                    معاينة
+                                </a>
+                                <a href="#" class="btn btn-small btn-outline">
+                                    <i class="fas fa-info-circle"></i>
+                                    التفاصيل
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-category">صحة</div>
+                        <h3>تطبيق HealthAI الصحي</h3>
+                        <p>تطبيق صحي يعتمد على الذكاء الاصطناعي لتحليل بيانات المرضى وتقديم التوصيات</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Python</span>
+                            <span class="tech-tag">TensorFlow</span>
+                            <span class="tech-tag">Flutter</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="project-card" data-category="web" data-aos="fade-up" data-aos-delay="300">
+                    <div class="project-image">
+                        <img src="https://images.pexels.com/photos/230544/pexels-photo-230544.jpeg?auto=compress&cs=tinysrgb&w=600" alt="متجر ShopTech">
+                        <div class="project-overlay">
+                            <div class="project-actions">
+                                <a href="#" class="btn btn-small">
+                                    <i class="fas fa-eye"></i>
+                                    معاينة
+                                </a>
+                                <a href="#" class="btn btn-small btn-outline">
+                                    <i class="fas fa-info-circle"></i>
+                                    التفاصيل
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="project-info">
+                        <div class="project-category">تجارة إلكترونية</div>
+                        <h3>متجر ShopTech الإلكتروني</h3>
+                        <p>متجر إلكتروني متكامل مع نظام إدارة متقدم وواجهة مستخدم عصرية</p>
+                        <div class="project-tech">
+                            <span class="tech-tag">Vue.js</span>
+                            <span class="tech-tag">Laravel</span>
+                            <span class="tech-tag">MySQL</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Us Section -->
+    <section id="why-us" class="why-us section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">لماذا تختارنا؟</h2>
+                <p class="section-subtitle">المميزات التي تجعلنا الخيار الأمثل لمشروعك</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" data-aos="flip-left" data-aos-delay="100">
+                    <div class="feature-number">01</div>
+                    <div class="feature-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>احترافية عالية</h3>
+                    <p>نلتزم بأعلى معايير الجودة والاحترافية في جميع مراحل العمل</p>
+                </div>
+                <div class="feature-card" data-aos="flip-left" data-aos-delay="200">
+                    <div class="feature-number">02</div>
+                    <div class="feature-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>دعم متواصل</h3>
+                    <p>نقدم دعماً فنياً متواصلاً ومتابعة دورية لضمان رضا العملاء</p>
+                </div>
+                <div class="feature-card" data-aos="flip-left" data-aos-delay="300">
+                    <div class="feature-number">03</div>
+                    <div class="feature-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <h3>كود نظيف وقابل للتطوير</h3>
+                    <p>نكتب كوداً نظيفاً ومنظماً يسهل صيانته وتطويره مستقبلاً</p>
+                </div>
+                <div class="feature-card" data-aos="flip-left" data-aos-delay="400">
+                    <div class="feature-number">04</div>
+                    <div class="feature-icon">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>خبرة متنوعة</h3>
+                    <p>فريق متنوع الخبرات يغطي جميع جوانب التطوير التقني</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">اتصل بنا</h2>
+                <p class="section-subtitle">نحن هنا لتحويل أفكارك إلى واقع رقمي</p>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info" data-aos="fade-right">
+                    <h3>معلومات الاتصال</h3>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>البريد الإلكتروني</h4>
+                            <p>devmasters.team@gmail.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>رقم الهاتف</h4>
+                            <p>+967-778447779</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <div class="contact-details">
+                            <h4>الموقع</h4>
+                            <p>اليمن / نعمل عن بُعد أيضاً</p>
+                        </div>
+                    </div>
+                    <div class="social-links">
+                        <a href="https://wa.me/967778447779" class="social-link whatsapp">
+                            <i class="fab fa-whatsapp"></i>
+                            <span>واتساب</span>
+                        </a>
+                        <a href="mailto:devmasters.team@gmail.com" class="social-link email">
+                            <i class="fas fa-envelope"></i>
+                            <span>البريد</span>
+                        </a>
+                    </div>
+                </div>
+                <form class="contact-form" id="contact-form" data-aos="fade-left">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">الاسم</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">البريد الإلكتروني</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">الموضوع</label>
+                        <input type="text" id="subject" name="subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">الرسالة</label>
+                        <textarea id="message" name="message" rows="5" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">
+                        <span>إرسال الرسالة</span>
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-waves">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"></path>
+            </svg>
+        </div>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="nav-brand">
+                        <i class="fas fa-code"></i>
+                        <span>DevMasters Team</span>
+                    </div>
+                    <p>فريق تقني متخصص في تطوير البرمجيات، نعمل بشغف لابتكار حلول تقنية تواكب المستقبل</p>
+                    <div class="footer-social">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                        <a href="#"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <h4>روابط سريعة</h4>
+                    <ul>
+                        <li><a href="#home">الرئيسية</a></li>
+                        <li><a href="#about">من نحن</a></li>
+                        <li><a href="#services">خدماتنا</a></li>
+                        <li><a href="#team">فريق العمل</a></li>
+                    </ul>
+                </div>
+                <div class="footer-contact">
+                    <h4>تواصل معنا</h4>
+                    <p><i class="fas fa-envelope"></i> devmasters.team@gmail.com</p>
+                    <p><i class="fas fa-phone"></i> +967-778447779</p>
+                    <p><i class="fas fa-map-marker-alt"></i> اليمن</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 DevMasters Team. جميع الحقوق محفوظة.</p>
+                <div class="footer-bottom-links">
+                    <a href="#">سياسة الخصوصية</a>
+                    <a href="#">شروط الاستخدام</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>
