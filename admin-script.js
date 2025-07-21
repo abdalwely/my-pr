@@ -3,6 +3,7 @@ import { db } from './firebase-config.js';
 import { 
     collection, 
     addDoc, 
+    setDoc,
     getDocs, 
     doc, 
     updateDoc, 
@@ -695,7 +696,7 @@ async function handleSettingsSubmit(e) {
     
     try {
         // Save settings to Firebase
-        await updateDoc(doc(db, 'settings', 'site'), settingsData);
+        await setDoc(doc(db, 'settings', 'site'), settingsData, { merge: true });
         showNotification('تم حفظ الإعدادات بنجاح', 'success');
         
         // Update main website immediately
@@ -720,7 +721,7 @@ async function handleDesignSettingsSubmit(e) {
     };
     
     try {
-        await updateDoc(doc(db, 'settings', 'design'), designData);
+        await setDoc(doc(db, 'settings', 'design'), designData, { merge: true });
         showNotification('تم تطبيق التصميم بنجاح', 'success');
         
         // Apply design changes immediately
@@ -746,7 +747,7 @@ async function handleTitlesSettingsSubmit(e) {
     };
     
     try {
-        await updateDoc(doc(db, 'settings', 'titles'), titlesData);
+        await setDoc(doc(db, 'settings', 'titles'), titlesData, { merge: true });
         showNotification('تم حفظ العناوين بنجاح', 'success');
         
         // Update titles immediately
@@ -839,6 +840,47 @@ function showNotification(message, type = 'info') {
 }
 
 // Make functions globally available
+// -----------------------------
+// DOM READY BINDINGS
+// -----------------------------
+document.addEventListener('DOMContentLoaded', () => {
+    // ربط استمارات الإعدادات
+    const siteForm   = document.getElementById('siteSettingsForm') || document.querySelector('form[name="siteSettings"]');
+    const designForm = document.getElementById('designSettingsForm') || document.querySelector('form[name="designSettings"]');
+    if (siteForm)   siteForm.addEventListener('submit', handleSettingsSubmit);
+    if (designForm) designForm.addEventListener('submit', handleDesignSettingsSubmit);
+});
+
+// -----------------------------
+// Helper functions to reflect changes instantly inside admin page
+// -----------------------------
+function applyDesignChanges(data){
+    const root = document.documentElement;
+    if(data.primaryColor)   root.style.setProperty('--primary-color', data.primaryColor);
+    if(data.secondaryColor) root.style.setProperty('--secondary-color', data.secondaryColor);
+    if(data.accentColor)    root.style.setProperty('--accent-color', data.accentColor);
+    if(data.backgroundColor)root.style.setProperty('--background-color', data.backgroundColor);
+    if(data.fontFamily){
+        root.style.setProperty('--font-family', `'${data.fontFamily}', sans-serif`);
+        root.style.fontFamily = `'${data.fontFamily}', sans-serif`;
+    }
+}
+
+function updateMainWebsiteSettings(data){
+    if(data.siteName){
+        document.querySelectorAll('.site-name').forEach(el=>el.textContent=data.siteName);
+        document.title = data.siteName;
+    }
+    if(data.heroTitle){
+        const el=document.getElementById('heroTitle');
+        if(el) el.textContent=data.heroTitle;
+    }
+    if(data.heroSubtitle){
+        const el=document.getElementById('heroSubtitle');
+        if(el) el.textContent=data.heroSubtitle;
+    }
+}
+
 window.openTeamModal = openTeamModal;
 window.closeTeamModal = closeTeamModal;
 window.editTeamMember = editTeamMember;

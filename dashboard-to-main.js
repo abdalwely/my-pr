@@ -125,6 +125,40 @@ function renderCollection({ q, containerSelector, renderer }) {
   });
 }
 
+/* ---------------- Site & Design Settings listeners ---------------- */
+function applySiteSettings(data){
+  if(!data) return;
+  if(data.siteName){
+    document.title = data.siteName;
+    document.querySelectorAll('#siteName, .site-name, .brand-name').forEach(el=>el.textContent=data.siteName);
+  }
+  if(data.heroTitle){
+    const el=document.getElementById('heroTitle');
+    if(el) el.textContent=data.heroTitle;
+  }
+  if(data.heroSubtitle){
+    const el=document.getElementById('heroSubtitle');
+    if(el) el.textContent=data.heroSubtitle;
+  }
+  if(data.siteDescription){
+    const meta=document.querySelector('meta[name="description"]');
+    if(meta) meta.setAttribute('content',data.siteDescription);
+  }
+}
+function applyDesign(data){
+  if(!data) return;
+  const root=document.documentElement;
+  if(data.primaryColor) root.style.setProperty('--primary-color',data.primaryColor);
+  if(data.secondaryColor) root.style.setProperty('--secondary-color',data.secondaryColor);
+  if(data.accentColor) root.style.setProperty('--accent-color',data.accentColor);
+  if(data.backgroundColor) root.style.setProperty('--background-color',data.backgroundColor);
+  if(data.fontFamily) root.style.setProperty('font-family',`'${data.fontFamily}', sans-serif`);
+}
+
+// start listeners once DOM ready
+onSnapshot(doc(db,'settings','site'), snap=>applySiteSettings(snap.data()));
+onSnapshot(doc(db,'settings','design'), snap=>applyDesign(snap.data()));
+
 /* ---------------- Real-time listeners ---------------- */
 document.addEventListener('DOMContentLoaded', () => {
   // Team members
