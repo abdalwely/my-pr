@@ -18,13 +18,13 @@ import {
 import { getDownloadURL, ref as storageRef } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-storage.js';
 
 /* ---------------- Site visit counter ---------------- */
-(async function recordVisit(){
-  try{
-    const statsRef = doc(db,'stats','site');
-    await updateDoc(statsRef,{visits: increment(1)});
-  }catch(err){
-    const statsRef = doc(db,'stats','site');
-    await setDoc(statsRef,{visits:1});
+(async function recordVisit() {
+  try {
+    const statsRef = doc(db, 'stats', 'site');
+    await updateDoc(statsRef, { visits: increment(1) });
+  } catch (err) {
+    const statsRef = doc(db, 'stats', 'site');
+    await setDoc(statsRef, { visits: 1 });
   }
 })();
 
@@ -60,7 +60,7 @@ async function createTeamCard(member) {
                 ${(member.skills || '')
                   .split(',')
                   .filter(Boolean)
-                  .map((s) => `<span>${s.trim()}</span>`) 
+                  .map((s) => `<span>${s.trim()}</span>`)
                   .join('')}
             </div>
         </div>
@@ -94,17 +94,21 @@ function renderCollection({ q, containerSelector, renderer }) {
   onSnapshot(q, (snapshot) => {
     snapshot.docChanges().forEach(async (change) => {
       let data = { id: change.doc.id, ...change.doc.data() };
+
       // resolve image
       if (data.image) {
         data._resolvedImage = await resolveImage(data.image);
       } else {
         data._resolvedImage = 'https://via.placeholder.com/300';
       }
+
       if (data.thumbnail || data.cover || data.projectImage) {
         const path = data.thumbnail || data.cover || data.projectImage;
         data._resolvedImage = await resolveImage(path);
       }
+
       const selector = `[data-fsid="${data.id}"]`;
+
       if (change.type === 'added') {
         if (!container.querySelector(selector)) {
           container.insertAdjacentHTML('beforeend', await renderer(data));
@@ -115,27 +119,13 @@ function renderCollection({ q, containerSelector, renderer }) {
           el.outerHTML = await renderer(data);
         }
       }
-      // نحن لا نحذف العنصر عند 'removed' لإبقاء المحتوى القديم إن أراد المستخدم ذلك
+
+      // لا نحذف العنصر عند 'removed' لإبقاء المحتوى القديم إن أراد المستخدم ذلك
     });
   });
 }
 
-
-/* ---------------- Site visit counter ---------------- */
-async function recordVisit(){
-  try{
-    const statsRef = doc(db,'stats','site');
-    await updateDoc(statsRef,{visits: increment(1)});
-  }catch(e){
-    // if doc missing create it
-    const statsRef = doc(db,'stats','site');
-    await setDoc(statsRef,{visits:1});
-  }
-}
-recordVisit();
-
 /* ---------------- Real-time listeners ---------------- */
-
 document.addEventListener('DOMContentLoaded', () => {
   // Team members
   const teamQuery = query(collection(db, 'team'), orderBy('name'));
