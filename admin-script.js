@@ -761,10 +761,10 @@ async function handleTitlesSettingsSubmit(e) {
 function applyDesignChanges(designData) {
     // Apply design changes to admin panel
     const root = document.documentElement;
-    root.style.setProperty('--primary-color', designData.primaryColor);
-    root.style.setProperty('--secondary-color', designData.secondaryColor);
-    root.style.setProperty('--accent-color', designData.accentColor);
-    root.style.setProperty('--background-color', designData.backgroundColor);
+    ('--primary-color', designData.primaryColor);
+    ('--secondary-color', designData.secondaryColor);
+    ('--accent-color', designData.accentColor);
+    ('--background-color', designData.backgroundColor);
     
     if (designData.fontFamily) {
         document.body.style.fontFamily = `'${designData.fontFamily}', sans-serif`;
@@ -852,24 +852,26 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // -----------------------------
-// Helper functions to reflect changes instantly inside admin page
+// (helper functions defined once above)
 // -----------------------------
-function applyDesignChanges(data){
+
+
     const root = document.documentElement;
-    if(data.primaryColor)   root.style.setProperty('--primary-color', data.primaryColor);
-    if(data.secondaryColor) root.style.setProperty('--secondary-color', data.secondaryColor);
-    if(data.accentColor)    root.style.setProperty('--accent-color', data.accentColor);
-    if(data.backgroundColor)root.style.setProperty('--background-color', data.backgroundColor);
+    if(data.primaryColor)   ('--primary-color', data.primaryColor);
+    if(data.secondaryColor) ('--secondary-color', data.secondaryColor);
+    if(data.accentColor)    ('--accent-color', data.accentColor);
+    if(data.backgroundColor)('--background-color', data.backgroundColor);
     if(data.fontFamily){
-        root.style.setProperty('--font-family', `'${data.fontFamily}', sans-serif`);
+        ('--font-family', `'${data.fontFamily}', sans-serif`);
         root.style.fontFamily = `'${data.fontFamily}', sans-serif`;
     }
-}
 
-function updateMainWebsiteSettings(data){
+
+
+
     if(data.siteName){
         document.querySelectorAll('.site-name').forEach(el=>el.textContent=data.siteName);
-        document.title = data.siteName;
+        document.title = data.siteName
     }
     if(data.heroTitle){
         const el=document.getElementById('heroTitle');
@@ -879,7 +881,7 @@ function updateMainWebsiteSettings(data){
         const el=document.getElementById('heroSubtitle');
         if(el) el.textContent=data.heroSubtitle;
     }
-}
+
 
 window.openTeamModal = openTeamModal;
 window.closeTeamModal = closeTeamModal;
