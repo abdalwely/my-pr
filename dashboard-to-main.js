@@ -1,237 +1,147 @@
-// هذا الملف يحقن الموظفين والمشاريع وإعدادات الموقع من localStorage إلى الصفحة الرئيسية
+// Fetch data from Firestore and inject into the public website (index.html)
+// This file uses ES-Modules so it must be included with <script type="module" src="dashboard-to-main.js"></script>
 
-function injectSiteSettings() {
-    const settings = JSON.parse(localStorage.getItem('siteSettings') || '{}');
+import './firebase-config.js'; // ensures Firebase app is initialised
+import { db, storage } from './firebase-config.js';
+import {
+  collection,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
+  increment,
+  onSnapshot,
+  query,
+  orderBy
+} from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js';
 
-    // العنوان الرئيسي
-    if (settings.title) {
-        const heroTitle = document.querySelector('.hero-title .highlight');
-        if (heroTitle) heroTitle.textContent = settings.title;
-    }
+import { getDownloadURL, ref as storageRef } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-storage.js';
 
-    // الألوان
-    if (settings.mainColor || settings.secondaryColor) {
-        const root = document.documentElement;
+/* ---------------- Site visit counter ---------------- */
+(async function recordVisit(){
+  try{
+    const statsRef = doc(db,'stats','site');
+    await updateDoc(statsRef,{visits: increment(1)});
+  }catch(err){
+    const statsRef = doc(db,'stats','site');
+    await setDoc(statsRef,{visits:1});
+  }
+})();
 
-        if (settings.mainColor) {
-            root.style.setProperty('--main-color', settings.mainColor);
-
-            document.querySelectorAll('.navbar, .section-title').forEach(el => {
-                el.style.color = settings.mainColor;
-            });
-            document.querySelectorAll('.btn-primary').forEach(el => {
-                el.style.background = settings.mainColor;
-            });
-        }
-
-        if (settings.overlayColor) {
-            root.style.setProperty('--overlay-color', settings.overlayColor);
-        }
-
-        if (settings.secondaryColor) {
-            root.style.setProperty('--secondary-color', settings.secondaryColor);
-            document.querySelectorAll('.btn-secondary').forEach(el => {
-                el.style.background = settings.secondaryColor;
-            });
-        }
-    }
+/* ---------------- Helper functions ---------------- */
+async function resolveImage(url) {
+  if (!url) return 'https://via.placeholder.com/300';
+  if (url.startsWith('http')) return url;
+  try {
+    return await getDownloadURL(storageRef(storage, url));
+  } catch {
+    return 'https://via.placeholder.com/300';
+  }
 }
 
-function injectEmployees() {
-    const employees = JSON.parse(localStorage.getItem('employees') || '[]');
-    const teamGrid = document.querySelector('.team-grid');
-    if (!teamGrid) return;
-
-    // حدّث أو أنشئ بطاقات حسب ترتيب المصفوفة
-    employees.forEach((emp, idx) => {
-        let card = teamGrid.querySelector(`.team-card[data-emp-index="${idx}"]`);
-        if (!card) {
-            card = document.createElement('div');
-            card.className = 'team-card';
-            card.dataset.dynamic = 'true';
-            card.dataset.empIndex = idx;
-            teamGrid.appendChild(card);
-        }
-        card.innerHTML = `
-            <div class="team-image">
-                <img src="${emp.image}" alt="${emp.name}">
-                <div class="team-overlay">
-                    <div class="social-links">
-                        ${emp.linkedin ? `<a href="${emp.linkedin}" class="social-link"><i class="fab fa-linkedin"></i></a>` : ''}
-                        ${emp.github ? `<a href="${emp.github}" class="social-link"><i class="fab fa-github"></i></a>` : ''}
-                        ${emp.twitter ? `<a href="${emp.twitter}" class="social-link"><i class="fab fa-twitter"></i></a>` : ''}
-                        ${emp.email ? `<a href="mailto:${emp.email}" class="social-link"><i class="fas fa-envelope"></i></a>` : ''}
-                    </div>
+async function createTeamCard(member) {
+  const idAttr = `data-fsid="${member.id}"`;
+  return `
+    <div class="team-card aos-animate" data-aos="zoom-in" ${idAttr}>
+        <div class="team-image">
+            <img src="${member._resolvedImage}" alt="${member.name}" onload="this.style.opacity='1'">
+            <div class="team-overlay">
+                <div class="social-links">
+                    ${member.linkedin ? `<a href="${member.linkedin}" class="social-link"><i class="fab fa-linkedin"></i></a>` : ''}
+                    ${member.github ? `<a href="${member.github}" class="social-link"><i class="fab fa-github"></i></a>` : ''}
                 </div>
             </div>
-            <div class="team-info">
-                <h3>${emp.name}</h3>
-                <p class="role">${emp.role || ''}</p>
-                <p class="description">${emp.desc || ''}</p>
-            </div>`;
-    });
-
-    // احذف البطاقات الزائدة إن وُجدت
-    teamGrid.querySelectorAll('.team-card[data-dynamic="true"]').forEach(card => {
-        if (parseInt(card.dataset.empIndex, 10) >= employees.length) card.remove();
-    });
+        </div>
+        <div class="team-info">
+            <h3>${member.name}</h3>
+            <p class="role">${member.role}</p>
+            <p class="description">${member.description || ''}</p>
+            <div class="team-skills">
+                ${(member.skills || '')
+                  .split(',')
+                  .filter(Boolean)
+                  .map((s) => `<span>${s.trim()}</span>`) 
+                  .join('')}
+            </div>
+        </div>
+    </div>`;
 }
 
-function injectProjects() {
-    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
-    const projectsGrid = document.querySelector('.projects-grid');
-    if (!projectsGrid) return;
-
-    projects.forEach((prj, idx) => {
-        let card = projectsGrid.querySelector(`.project-card[data-proj-index="${idx}"]`);
-        if (!card) {
-            card = document.createElement('div');
-            card.className = 'project-card';
-            card.dataset.dynamic = 'true';
-            card.dataset.projIndex = idx;
-            projectsGrid.appendChild(card);
-        }
-        const images = Array.isArray(prj.images) ? prj.images : (prj.image ? [prj.image] : []);
-        const mainImg = images[0] || '';
-        const previewBar = images.length > 1 ? `<div class='project-images-bar' style='display:flex;gap:4px;margin-top:6px;'>${images.slice(1).map(img => `<img src='${img}' style='width:32px;height:32px;object-fit:cover;border-radius:6px;border:1px solid #ccc;'>`).join('')}</div>` : '';
-
-        card.innerHTML = `
-            <div class="project-image">
-                <img src="${mainImg}" alt="${prj.name}">
-                <div class="project-overlay">
-                    <div class="project-actions">
-                        ${prj.link ? `<a href="${prj.link}" class="btn btn-primary" target="_blank">زيارة المشروع</a>` : ''}
-                    </div>
-                </div>
-                ${previewBar}
-            </div>
-            <div class="project-info">
-                <h3>${prj.name}</h3>
-                <p class="description">${prj.desc}</p>
-            </div>`;
-    });
-
-    // احذف البطاقات الزائدة إن وُجدت
-    projectsGrid.querySelectorAll('.project-card[data-dynamic="true"]').forEach(card => {
-        if (parseInt(card.dataset.projIndex, 10) >= projects.length) card.remove();
-    });
-}
-    const employees = JSON.parse(localStorage.getItem('employees') || '[]');
-    const teamGrid = document.querySelector('.team-grid');
-    if (!teamGrid) return;
-
-    // إزالة العناصر الديناميكية فقط للحفاظ على العناصر الأصلية
-    teamGrid.querySelectorAll('.team-card[data-dynamic="true"]').forEach(e => e.remove());
-
-    employees.forEach(emp => {
-        const existingCard = [...teamGrid.querySelectorAll('.team-card')]
-            .find(c => c.querySelector('h3') && c.querySelector('h3').textContent.trim() === emp.name.trim());
-
-        let card;
-        if (existingCard) {
-            card = existingCard;
-            card.innerHTML = '';
-        } else {
-            card = document.createElement('div');
-            card.className = 'team-card';
-            card.setAttribute('data-dynamic', 'true');
-            teamGrid.appendChild(card);
-        }
-
-        card.innerHTML = `
-            <div class="team-image">
-                <img src="${emp.image}" alt="${emp.name}">
-                <div class="team-overlay">
-                    <div class="social-links">
-                        ${emp.linkedin ? `<a href="${emp.linkedin}" class="social-link"><i class="fab fa-linkedin"></i></a>` : ''}
-                        ${emp.github ? `<a href="${emp.github}" class="social-link"><i class="fab fa-github"></i></a>` : ''}
-                        ${emp.twitter ? `<a href="${emp.twitter}" class="social-link"><i class="fab fa-twitter"></i></a>` : ''}
-                        ${emp.email ? `<a href="mailto:${emp.email}" class="social-link"><i class="fas fa-envelope"></i></a>` : ''}
-                    </div>
+async function createProjectCard(project) {
+  const idAttr = `data-fsid="${project.id}"`;
+  return `
+    <div class="project-card aos-animate" data-category="${project.category || 'web'}" data-aos="fade-up" ${idAttr}>
+        <div class="project-image">
+            <img src="${project._resolvedImage}" alt="${project.name}" onload="this.style.opacity='1'">
+            <div class="project-overlay">
+                <div class="project-actions">
+                    ${project.demo ? `<a href="${project.demo}" class="btn btn-small"><i class="fas fa-eye"></i> معاينة</a>` : ''}
+                    ${project.details ? `<a href="${project.details}" class="btn btn-small btn-outline"><i class="fas fa-info-circle"></i> التفاصيل</a>` : ''}
                 </div>
             </div>
-            <div class="team-info">
-                <h3>${emp.name}</h3>
-                <p class="role">${emp.role || 'موظف جديد'}</p>
-                <p class="description">${emp.desc || ''}</p>
-            </div>
-        `;
-    });
-
-
-function injectProjects() {
-    const projects = JSON.parse(localStorage.getItem('projects') || '[]');
-    const projectsGrid = document.querySelector('.projects-grid');
-    if (!projectsGrid) return;
-
-    // إزالة العناصر الديناميكية فقط للحفاظ على المشاريع الأصلية المدمجة في HTML
-    projectsGrid.querySelectorAll('.project-card[data-dynamic="true"]').forEach(e => e.remove());
-
-    projects.forEach(prj => {
-        const existing = [...projectsGrid.querySelectorAll('.project-card')]
-            .find(c => c.querySelector('h3') && c.querySelector('h3').textContent.trim() === prj.name.trim());
-
-        let card;
-        if (existing) {
-            card = existing;
-            card.innerHTML = '';
-        } else {
-            card = document.createElement('div');
-            card.className = 'project-card';
-            card.setAttribute('data-dynamic', 'true');
-            projectsGrid.appendChild(card);
-        }
-
-        let images = prj.images && Array.isArray(prj.images) ? prj.images : (prj.image ? [prj.image] : []);
-        let mainImg = images.length ? images[0] : '';
-        let previewBar = '';
-
-        if (images.length > 1) {
-            previewBar = `<div class='project-images-bar' style='display:flex;gap:4px;margin-top:6px;'>` +
-                images.slice(1).map(img => `<img src='${img}' style='width:32px;height:32px;object-fit:cover;border-radius:6px;border:1px solid #ccc;'>`).join('') +
-                `</div>`;
-        }
-
-        card.innerHTML = `
-            <div class="project-image">
-                <img src="${mainImg}" alt="${prj.name}">
-                <div class="project-overlay">
-                    <div class="project-actions">
-                        ${prj.link ? `<a href="${prj.link}" class="btn btn-primary" target="_blank">زيارة المشروع</a>` : ''}
-                    </div>
-                </div>
-                ${previewBar}
-            </div>
-            <div class="project-info">
-                <h3>${prj.name}</h3>
-                <p class="description">${prj.desc}</p>
-            </div>
-        `;
-    });
+        </div>
+        <div class="project-info">
+            <h3>${project.name}</h3>
+            <p>${project.category}</p>
+        </div>
+    </div>`;
 }
 
-// مراقبة التغييرات من لوحة التحكم
-window.addEventListener('storage', function (e) {
-    if (e.key === 'employees') injectEmployees();
-    if (e.key === 'projects') injectProjects();
-    if (e.key === 'siteSettings') injectSiteSettings();
+function renderCollection({ q, containerSelector, renderer }) {
+  const container = document.querySelector(containerSelector);
+  if (!container) return;
+
+  onSnapshot(q, (snapshot) => {
+    snapshot.docChanges().forEach(async (change) => {
+      let data = { id: change.doc.id, ...change.doc.data() };
+      // resolve image
+      if (data.image) {
+        data._resolvedImage = await resolveImage(data.image);
+      } else {
+        data._resolvedImage = 'https://via.placeholder.com/300';
+      }
+      if (data.thumbnail || data.cover || data.projectImage) {
+        const path = data.thumbnail || data.cover || data.projectImage;
+        data._resolvedImage = await resolveImage(path);
+      }
+      const selector = `[data-fsid="${data.id}"]`;
+      if (change.type === 'added') {
+        if (!container.querySelector(selector)) {
+          container.insertAdjacentHTML('beforeend', await renderer(data));
+        }
+      } else if (change.type === 'modified') {
+        const el = container.querySelector(selector);
+        if (el) {
+          el.outerHTML = await renderer(data);
+        }
+      }
+      // نحن لا نحذف العنصر عند 'removed' لإبقاء المحتوى القديم إن أراد المستخدم ذلك
+    });
+  });
+}
+
+
+/* ---------------- Site visit counter ---------------- */
+async function recordVisit(){
+  try{
+    const statsRef = doc(db,'stats','site');
+    await updateDoc(statsRef,{visits: increment(1)});
+  }catch(e){
+    // if doc missing create it
+    const statsRef = doc(db,'stats','site');
+    await setDoc(statsRef,{visits:1});
+  }
+}
+recordVisit();
+
+/* ---------------- Real-time listeners ---------------- */
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Team members
+  const teamQuery = query(collection(db, 'team'), orderBy('name'));
+  renderCollection({ q: teamQuery, containerSelector: '#team .team-grid, .team-grid', renderer: createTeamCard });
+
+  // Projects
+  const projectQuery = query(collection(db, 'projects'), orderBy('name'));
+  renderCollection({ q: projectQuery, containerSelector: '#projects .projects-grid, .projects-grid', renderer: createProjectCard });
 });
-
-// استقبال postMessage من لوحة التحكم (حفظ الإعدادات)
-window.addEventListener('message', function (e) {
-    if (e.data && e.data.type === 'updateSiteSettings') injectSiteSettings();
-    if (e.data && e.data.type === 'updateEmployees') injectEmployees();
-    if (e.data && e.data.type === 'updateProjects') injectProjects();
-});
-
-// تحديث فوري عند العودة من لوحة التحكم
-window.addEventListener('focus', () => {
-    injectSiteSettings();
-    injectEmployees();
-    injectProjects();
-});
-
-// استدعاء أولي
-injectSiteSettings();
-injectEmployees();
-injectProjects();
