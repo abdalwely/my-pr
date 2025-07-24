@@ -13,13 +13,15 @@ import {
     orderBy 
 } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-firestore.js';
 import { 
-    auth 
+    auth,
+    storage
 } from './firebase-config.js';
 import { 
     signInWithEmailAndPassword,
     signOut,
     onAuthStateChanged 
 } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-auth.js';
+import { ref, uploadBytes, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.5.0/firebase-storage.js';
 
 // Global variables
 let currentUser = null;
@@ -85,10 +87,14 @@ function initializeEventListeners() {
     }
     
     // Forms
-    document.getElementById('teamForm').addEventListener('submit', handleTeamSubmit);
-    document.getElementById('projectForm').addEventListener('submit', handleProjectSubmit);
-    document.getElementById('serviceForm').addEventListener('submit', handleServiceSubmit);
-    document.getElementById('siteSettingsForm').addEventListener('submit', handleSettingsSubmit);
+    const teamFormEl = document.getElementById('teamForm');
+    if (teamFormEl) teamFormEl.addEventListener('submit', handleTeamSubmit);
+    const projectFormEl = document.getElementById('projectForm');
+    if (projectFormEl) projectFormEl.addEventListener('submit', handleProjectSubmit);
+    const serviceFormEl = document.getElementById('serviceForm');
+    if (serviceFormEl) serviceFormEl.addEventListener('submit', handleServiceSubmit);
+    const siteSettingsFormEl = document.getElementById('siteSettingsForm');
+    if (siteSettingsFormEl) siteSettingsFormEl.addEventListener('submit', handleSettingsSubmit);
     
     // Modal close events
     document.addEventListener('click', (e) => {
@@ -164,8 +170,8 @@ function toggleSidebar() {
 // Navigation
 function handleNavigation(e) {
     e.preventDefault();
-    
     const targetSection = e.target.getAttribute('data-section');
+    if(!targetSection) return;
     
     // Update active nav item
     document.querySelectorAll('.nav-item').forEach(item => {
@@ -363,7 +369,7 @@ function openTeamModal(memberId = null) {
         document.getElementById('memberName').value = member.name;
         document.getElementById('memberRole').value = member.role;
         document.getElementById('memberDescription').value = member.description;
-        document.getElementById('memberImage').value = member.image;
+        document.getElementById('memberPrevImage').value = member.image; // store previous url
         document.getElementById('memberSkills').value = member.skills || '';
         document.getElementById('memberLinkedin').value = member.linkedin || '';
         document.getElementById('memberGithub').value = member.github || '';
@@ -374,6 +380,7 @@ function openTeamModal(memberId = null) {
     }
     
     modal.style.display = 'block';
+
 }
 
 function closeTeamModal() {
@@ -384,11 +391,22 @@ async function handleTeamSubmit(e) {
     e.preventDefault();
     
     const formData = new FormData(e.target);
+    // ---- Handle image upload ----
+    const imageFileEl = document.getElementById('memberImageFile');
+    const imageFile   = imageFileEl ? imageFileEl.files[0] : null;
+    let imageUrl      = formData.get('prevImage') || '';
+
+    if (imageFile) {
+        const storageRef = ref(storage, `team/${Date.now()}_${imageFile.name}`);
+        await uploadBytes(storageRef, imageFile);
+        imageUrl = await getDownloadURL(storageRef);
+    }
+
     const memberData = {
         name: formData.get('name'),
         role: formData.get('role'),
         description: formData.get('description'),
-        image: formData.get('image'),
+        image: imageUrl,
         skills: formData.get('skills'),
         linkedin: formData.get('linkedin'),
         github: formData.get('github'),
@@ -501,7 +519,7 @@ function openProjectModal(projectId = null) {
         document.getElementById('projectDescription').value = project.description;
         document.getElementById('projectCategory').value = project.category;
         document.getElementById('projectStatus').value = project.status;
-        document.getElementById('projectImage').value = project.image;
+        document.getElementById('projectPrevImage').value = project.image;
         document.getElementById('projectTech').value = project.technologies || '';
         document.getElementById('projectDemo').value = project.demoUrl || '';
         document.getElementById('projectGithub').value = project.githubUrl || '';
@@ -522,12 +540,23 @@ async function handleProjectSubmit(e) {
     e.preventDefault();
     
     const formData = new FormData(e.target);
+    // ---- Handle project image upload ----
+    const projImageEl = document.getElementById('projectImageFile');
+    const projFile    = projImageEl ? projImageEl.files[0] : null;
+    let projImageUrl  = formData.get('prevImage') || '';
+
+    if (projFile) {
+        const storageRef = ref(storage, `projects/${Date.now()}_${projFile.name}`);
+        await uploadBytes(storageRef, projFile);
+        projImageUrl = await getDownloadURL(storageRef);
+    }
+
     const projectData = {
         name: formData.get('name'),
         description: formData.get('description'),
         category: formData.get('category'),
         status: formData.get('status'),
-        image: formData.get('image'),
+        image: projImageUrl,
         technologies: formData.get('technologies'),
         demoUrl: formData.get('demoUrl'),
         githubUrl: formData.get('githubUrl'),
@@ -761,10 +790,10 @@ async function handleTitlesSettingsSubmit(e) {
 function applyDesignChanges(designData) {
     // Apply design changes to admin panel
     const root = document.documentElement;
-    ('--primary-color', designData.primaryColor);
-    ('--secondary-color', designData.secondaryColor);
-    ('--accent-color', designData.accentColor);
-    ('--background-color', designData.backgroundColor);
+    if (designData.primaryColor)   root.style.setProperty('--primary-color', designData.primaryColor);
+    if (designData.secondaryColor) root.style.setProperty('--secondary-color', designData.secondaryColor);
+    if (designData.accentColor)    root.style.setProperty('--accent-color', designData.accentColor);
+    if (designData.backgroundColor)root.style.setProperty('--background-color', designData.backgroundColor);
     
     if (designData.fontFamily) {
         document.body.style.fontFamily = `'${designData.fontFamily}', sans-serif`;
@@ -808,10 +837,11 @@ function updateMainWebsiteTitles(titlesData) {
         console.log('Could not communicate with parent window');
     }
 }
+
 // Utility Functions
 function closeAllModals() {
     document.querySelectorAll('.modal').forEach(modal => {
-        modal.style.display = 'none';
+      
     });
 }
 
@@ -852,48 +882,25 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // -----------------------------
-// (helper functions defined once above)
-// -----------------------------
-
-
-    const root = document.documentElement;
-    if(data.primaryColor)   ('--primary-color', data.primaryColor);
-    if(data.secondaryColor) ('--secondary-color', data.secondaryColor);
-    if(data.accentColor)    ('--accent-color', data.accentColor);
-    if(data.backgroundColor)('--background-color', data.backgroundColor);
-    if(data.fontFamily){
-        ('--font-family', `'${data.fontFamily}', sans-serif`);
-        root.style.fontFamily = `'${data.fontFamily}', sans-serif`;
-    }
 
 
 
 
-    if(data.siteName){
-        document.querySelectorAll('.site-name').forEach(el=>el.textContent=data.siteName);
-        document.title = data.siteName
-    }
-    if(data.heroTitle){
-        const el=document.getElementById('heroTitle');
-        if(el) el.textContent=data.heroTitle;
-    }
-    if(data.heroSubtitle){
-        const el=document.getElementById('heroSubtitle');
-        if(el) el.textContent=data.heroSubtitle;
-    }
 
 
-window.openTeamModal = openTeamModal;
-window.closeTeamModal = closeTeamModal;
-window.editTeamMember = editTeamMember;
-window.deleteTeamMember = deleteTeamMember;
-window.openProjectModal = openProjectModal;
-window.closeProjectModal = closeProjectModal;
-window.editProject = editProject;
-window.deleteProject = deleteProject;
-window.openServiceModal = openServiceModal;
-window.closeServiceModal = closeServiceModal;
-window.editService = editService;
-window.deleteService = deleteService;
-window.logout = logout;
-window.togglePassword = togglePassword;
+
+
+globalThis.openTeamModal = openTeamModal;
+globalThis.closeTeamModal = closeTeamModal;
+globalThis.editTeamMember = editTeamMember;
+globalThis.deleteTeamMember = deleteTeamMember;
+globalThis.openProjectModal = openProjectModal;
+globalThis.closeProjectModal = closeProjectModal;
+globalThis.editProject = editProject;
+globalThis.deleteProject = deleteProject;
+globalThis.openServiceModal = openServiceModal;
+globalThis.closeServiceModal = closeServiceModal;
+globalThis.editService = editService;
+globalThis.deleteService = deleteService;
+globalThis.logout = logout;
+globalThis.togglePassword = togglePassword;
