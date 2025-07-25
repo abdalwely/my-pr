@@ -99,11 +99,82 @@ const heroStatsObserver = new IntersectionObserver((entries) => {
                 const target = parseInt(stat.getAttribute('data-target'));
                 animateCounter(stat, target);
             });
-            heroStatsObserver.unobserve(entry.target);
         }
     });
-}, { threshold: 0.5 });
+});
 
+// Initialize WhatsApp Contact Form Handler
+const initializeContactForm = () => {
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Get form values
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const subject = document.getElementById('subject').value;
+            const message = document.getElementById('message').value;
+            
+            // Create WhatsApp message
+            const whatsappMessage = `*الاسم:* ${name}\n*البريد الإلكتروني:* ${email}\n*الموضوع:* ${subject}\n*الرسالة:* ${message}`;
+            
+            // Encode message to handle special characters
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            
+            // WhatsApp phone number
+            const whatsappNumber = '+967778447779';
+            
+            // Create WhatsApp URL
+            const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+            
+            // Open WhatsApp in new tab
+            window.open(whatsappUrl, '_blank');
+            
+            // Show success notification
+            showNotification('تم إرسال الرسالة بنجاح إلى واتساب!', 'success');
+            
+            // Reset form
+            contactForm.reset();
+        });
+    }
+};
+
+// Initialize all components when DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize WhatsApp Contact Form
+    initializeContactForm();
+    
+    // Initialize other components
+    initializeNavigation();
+    initializeScrollEffects();
+    initializeSmoothScrolling();
+    initializeNavigationHighlighting();
+    initializeHeroStats();
+    initializeEnhancedAnimations();
+    initializeParticles();
+});
+
+// Initialize Hero Stats
+function initializeHeroStats() {
+    const heroStatsObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const statNumbers = document.querySelectorAll('.stat-number');
+                statNumbers.forEach(stat => {
+                    const target = parseInt(stat.getAttribute('data-target'));
+                    animateCounter(stat, target);
+                });
+            }
+        });
+    });
+    
+    // Observe hero section
+    const heroSection = document.querySelector('.hero');
+    if (heroSection) {
+        heroStatsObserver.observe(heroSection);
+    }
+}         
 const heroStats = document.querySelector('.hero-stats');
 if (heroStats) {
     heroStatsObserver.observe(heroStats);
