@@ -36,18 +36,24 @@ window.addEventListener('scroll', () => {
     }
 });
 
-// Smooth scrolling for navigation links
+// Smooth scrolling for navigation links (robust)
 document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        // Ignore empty or plain "#" links
+        if (!href || href === '#') return;
+        // Prevent default only for internal anchor links
         e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-            const offset = 90;
-            const targetPosition = target.offsetTop - offset;
-            window.scrollTo({
-                top: targetPosition,
-                behavior: 'smooth'
-            });
+        try {
+            const target = document.querySelector(href);
+            if (target) {
+                const offset = 90;
+                const targetPosition = target.offsetTop - offset;
+                window.scrollTo({ top: targetPosition, behavior: 'smooth' });
+            }
+        } catch (err) {
+            // Silently ignore invalid selectors to avoid breaking other scripts
+            console.error('Invalid selector in smooth scroll:', href, err);
         }
     });
 });
@@ -633,6 +639,82 @@ function createParticles() {
 
 // Initialize particles (uncomment if desired)
 // createParticles();
+
+// ================= Project Details Modal =================
+function initProjectModals() {
+    // Create modal container once
+    const modal = document.createElement('div');
+    modal.className = 'project-modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <button class="close-btn" aria-label="Close">&times;</button>
+            <div class="modal-image"><img src="" alt="project"></div>
+            <div class="modal-body">
+                <h3></h3>
+                <p class="project-desc"></p>
+                <div class="tech-tags"></div>
+                <div class="modal-actions">
+                    <a href="#" target="_blank" class="btn btn-primary demo-link">
+                        <i class="fas fa-eye"></i>
+                        معاينة مباشرة
+                    </a>
+                </div>
+            </div>
+        </div>`;
+    document.body.appendChild(modal);
+
+    // Close handlers
+    const close = () => modal.classList.remove('active');
+    modal.querySelector('.close-btn').addEventListener('click', close);
+    modal.addEventListener('click', (e) => { if (e.target === modal) close(); });
+
+    // Add listeners to project cards
+    document.querySelectorAll('.project-card').forEach(card => {
+        const previewBtn = card.querySelector('.project-actions .btn-small');
+        const detailsBtn = card.querySelector('.project-actions .btn-outline');
+
+        const imgEl = card.querySelector('img');
+        const title = card.querySelector('h3').textContent;
+        const desc = card.querySelector('p').textContent;
+        const techTags = Array.from(card.querySelectorAll('.tech-tag')).map(t => t.textContent);
+        const demoLink = (previewBtn && previewBtn.getAttribute('href')) || '#';
+
+        const show = (e, showDetails = true) => {
+            console.log('Show modal', {title, showDetails});
+            e.preventDefault();
+            modal.querySelector('.modal-image img').src = imgEl.src;
+            modal.querySelector('.modal-image img').alt = imgEl.alt;
+
+            const bodyEl = modal.querySelector('.modal-body');
+            if (showDetails) {
+                bodyEl.style.display = 'block';
+                modal.querySelector('h3').textContent = title;
+                modal.querySelector('.project-desc').textContent = desc;
+                modal.querySelector('.tech-tags').innerHTML = techTags.map(t => `<span>${t}</span>`).join('');
+                const demoAnchor = modal.querySelector('.demo-link');
+                if (demoLink && demoLink !== '#') {
+                    demoAnchor.style.display = 'inline-flex';
+                    demoAnchor.href = demoLink;
+                } else {
+                    demoAnchor.style.display = 'none';
+                }
+            } else {
+                bodyEl.style.display = 'none';
+            }
+            modal.classList.add('active');
+        };
+
+        if (previewBtn) previewBtn.addEventListener('click', (e)=>show(e,false));
+        if (detailsBtn) detailsBtn.addEventListener('click', (e)=>show(e,true));
+    });
+}
+
+// Call after DOM ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProjectModals);
+} else {
+    initProjectModals();
+}
 
 // Performance optimization: Throttle scroll events
 function throttle(func, limit) {
